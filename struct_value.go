@@ -76,6 +76,9 @@ func deepToH(v any) any {
 	return v
 }
 
+// ToHash is an alias for [Struct.ToH] (Ruby exposes both `#to_h` and `#to_hash`).
+func (s *Struct) ToHash() *drytypes.Map { return s.ToH() }
+
 // With returns a new [*Struct] with the given attributes overridden (Ruby's
 // `struct.new(changes)`): the receiver's attributes are merged with changes and
 // re-coerced through the schema, yielding a fresh immutable instance. The

@@ -1,0 +1,98 @@
+[
+  {
+    "name": "basic",
+    "ok": true,
+    "inspect": "#<Person name=\"A\" address=#<Address street=\"s\" city=\"c\">>",
+    "to_h": "{name: \"A\", address: {street: \"s\", city: \"c\"}}"
+  },
+  {
+    "name": "nested_bad",
+    "ok": false,
+    "error": "[Person.new] {street: 1, city: \"c\"} (Hash) has invalid type for :address violates constraints ([Address.new] 1 (Integer) has invalid type for :street violates constraints (type?(String, 1) failed) failed)",
+    "error_class": "Dry::Struct::Error"
+  },
+  {
+    "name": "nested_missing",
+    "ok": false,
+    "error": "[Person.new] {street: \"s\"} (Hash) has invalid type for :address violates constraints ([Address.new] :city is missing in Hash input failed)",
+    "error_class": "Dry::Struct::Error"
+  },
+  {
+    "name": "cfg_noport",
+    "ok": true,
+    "inspect": "#<Cfg host=\"h\" port=nil>",
+    "to_h": "{host: \"h\"}"
+  },
+  {
+    "name": "cfg_port",
+    "ok": true,
+    "inspect": "#<Cfg host=\"h\" port=80>",
+    "to_h": "{host: \"h\", port: 80}"
+  },
+  {
+    "name": "srv_default",
+    "ok": true,
+    "inspect": "#<Srv name=\"anon\" count=0>",
+    "to_h": "{name: \"anon\", count: 0}"
+  },
+  {
+    "name": "srv_override",
+    "ok": true,
+    "inspect": "#<Srv name=\"x\" count=5>",
+    "to_h": "{name: \"x\", count: 5}"
+  },
+  {
+    "name": "tags",
+    "ok": true,
+    "inspect": "#<Tags names=[\"1\", \"2\", \"x\"]>",
+    "to_h": "{names: [\"1\", \"2\", \"x\"]}"
+  },
+  {
+    "name": "team",
+    "ok": true,
+    "inspect": "#<Team members=[#<Person name=\"A\" address=#<Address street=\"s\" city=\"c\">>]>",
+    "to_h": "{members: [{name: \"A\", address: {street: \"s\", city: \"c\"}}]}"
+  },
+  {
+    "name": "strict_ok",
+    "ok": true,
+    "inspect": "#<StrictS name=\"x\">",
+    "to_h": "{name: \"x\"}"
+  },
+  {
+    "name": "strict_bad",
+    "ok": false,
+    "error": "[StrictS.new] unexpected keys [:extra] in Hash input",
+    "error_class": "Dry::Struct::Error"
+  },
+  {
+    "name": "empty",
+    "ok": true,
+    "inspect": "#<Empty>",
+    "to_h": "{}"
+  },
+  {
+    "name": "missing_key",
+    "ok": false,
+    "error": "[Person.new] :address is missing in Hash input",
+    "error_class": "Dry::Struct::Error"
+  },
+  {
+    "name": "coerce_fail",
+    "ok": false,
+    "error": "[Cfg.new] \"abc\" (String) has invalid type for :port violates constraints (invalid value for Integer(): \"abc\" failed)",
+    "error_class": "Dry::Struct::Error"
+  },
+  {
+    "name": "wrong_type",
+    "ok": false,
+    "error": "[Person.new] 5 (Integer) has invalid type for :name violates constraints (type?(String, 5) failed)",
+    "error_class": "Dry::Struct::Error"
+  },
+  {
+    "name": "not_hash",
+    "ok": false,
+    "error": "[Person.new] can't convert String into Hash",
+    "error_class": "Dry::Struct::Error"
+  }
+]

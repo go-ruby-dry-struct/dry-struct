@@ -42,13 +42,14 @@ import (
 )
 
 // Attribute is one declared member of a [*StructType]: its symbol name, the
-// dry-types [drytypes.Type] that coerces-and-validates its value, and whether it
-// is optional (declared with `attribute?`, i.e. the key may be absent).
+// [AttrType] (a dry-types type or a nested [*StructType]) that coerces-and-
+// validates its value, and whether it is optional (declared with `attribute?`,
+// i.e. the key may be absent).
 type Attribute struct {
 	// Name is the attribute's symbol name (Ruby `:name`).
 	Name drytypes.Symbol
 	// Type coerces and validates the attribute's value.
-	Type drytypes.Type
+	Type AttrType
 	// Optional reports whether the attribute was declared with `attribute?`.
 	Optional bool
 }

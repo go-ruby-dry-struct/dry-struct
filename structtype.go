@@ -40,17 +40,41 @@ func New(name string) *StructType {
 	return &StructType{Name: name, index: map[drytypes.Symbol]int{}}
 }
 
-// Attribute declares a required attribute (`attribute :name, type`) and returns
-// the receiver for chaining. Re-declaring a name replaces it in place (keeping
-// its position), matching a subclass overriding an inherited attribute.
+// Define is the `Dry.Struct do … end` DSL: it builds an anonymous [*StructType]
+// named name and runs build against it to register attributes and config,
+// returning the finished type. It is sugar over [New] + the chaining methods.
+func Define(name string, build func(*StructType)) *StructType {
+	s := New(name)
+	build(s)
+	return s
+}
+
+// Attribute declares a required attribute (`attribute :name, type`) whose type
+// is a dry-types [drytypes.Type], and returns the receiver for chaining.
+// Re-declaring a name replaces it in place (keeping its position), matching a
+// subclass overriding an inherited attribute.
 func (s *StructType) Attribute(name drytypes.Symbol, t drytypes.Type) *StructType {
+	return s.add(Attribute{Name: name, Type: Wrap(t), Optional: false})
+}
+
+// AttributeOpt declares an optional attribute (`attribute? :name, type`) whose
+// type is a dry-types [drytypes.Type]: the key may be absent, in which case the
+// attribute is omitted from [Struct.ToH] and reads back as nil. Returns the
+// receiver for chaining.
+func (s *StructType) AttributeOpt(name drytypes.Symbol, t drytypes.Type) *StructType {
+	return s.add(Attribute{Name: name, Type: Wrap(t), Optional: true})
+}
+
+// AttributeType declares a required attribute whose type is any [AttrType] —
+// a nested [*StructType] (for `attribute :address, AddressStruct`) or a wrapped
+// dry-types type. Returns the receiver for chaining.
+func (s *StructType) AttributeType(name drytypes.Symbol, t AttrType) *StructType {
 	return s.add(Attribute{Name: name, Type: t, Optional: false})
 }
 
-// AttributeOpt declares an optional attribute (`attribute? :name, type`): the
-// key may be absent, in which case the attribute is omitted from [Struct.ToH]
-// and reads back as nil. Returns the receiver for chaining.
-func (s *StructType) AttributeOpt(name drytypes.Symbol, t drytypes.Type) *StructType {
+// AttributeTypeOpt declares an optional attribute whose type is any [AttrType].
+// Returns the receiver for chaining.
+func (s *StructType) AttributeTypeOpt(name drytypes.Symbol, t AttrType) *StructType {
 	return s.add(Attribute{Name: name, Type: t, Optional: true})
 }
 

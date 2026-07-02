@@ -47,10 +47,43 @@ func inspect(v any) string {
 		return "[" + strings.Join(parts, ", ") + "]"
 	case *drytypes.Map:
 		return mapInspect(x)
+	case map[string]any, map[drytypes.Symbol]any, map[any]any:
+		if m, ok := asMap(v); ok {
+			return mapInspect(m)
+		}
 	case *Struct:
 		return x.Inspect()
 	}
 	return fmt.Sprintf("%v", v)
+}
+
+// valueClass is the Ruby class name of v, used in a schema error's
+// `<v> (<Class>) has invalid type …` prefix (matching dry-types' valueClass).
+func valueClass(v any) string {
+	switch v.(type) {
+	case nil:
+		return "NilClass"
+	case bool:
+		if v.(bool) {
+			return "TrueClass"
+		}
+		return "FalseClass"
+	case string:
+		return "String"
+	case drytypes.Symbol:
+		return "Symbol"
+	case int, int32, int64, *big.Int:
+		return "Integer"
+	case float64:
+		return "Float"
+	case []any:
+		return "Array"
+	case *drytypes.Map, map[string]any, map[drytypes.Symbol]any, map[any]any:
+		return "Hash"
+	case *Struct:
+		return v.(*Struct).typ.Name
+	}
+	return "Object"
 }
 
 // mapInspect renders an ordered map the way Ruby 4.0's Hash#inspect does: the

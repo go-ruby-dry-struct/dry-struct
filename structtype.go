@@ -20,7 +20,7 @@ import (
 type StructType struct {
 	// Name is the struct's class name, used in error messages and inspect
 	// (`[Name.new] …`, `#<Name …>`).
-	Name string
+	Name  string
 	attrs []Attribute
 	// index maps attribute name to its position in attrs.
 	index map[drytypes.Symbol]int
